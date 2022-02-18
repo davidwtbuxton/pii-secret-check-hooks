@@ -1,3 +1,4 @@
+import datetime
 import pathlib
 import tokenize
 
@@ -120,7 +121,13 @@ class CheckForNER(CheckFileBase):
         # many files. Use append mode so that we don't overwrite output from
         # other invocations. The user is responsible for deleting the file
         # between runs.
+        if not self.entity_list:
+            return
+
+        now = datetime.datetime.utcnow()
+
         with open(self.ner_output_file, "a") as exclude_file:
+            exclude_file.write(f"# Generated at {now}\n")
             for entity in self.entity_list:
                 exclude_file.write(f"{entity}\n")
 
